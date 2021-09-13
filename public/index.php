@@ -13,6 +13,7 @@ if (!$account = App\Model\GoogleAccountBuilder::findUnused())
 ($controller = (new App\Controller\GoogleAccountController()))->set($account);
 
 $invoker->call('App\Method\GoogleLogin', [$controller]);
+
 $authCode = $invoker->call(function() use (&$container){
 	preg_match("#code=(.*?)\&#", $container->get('webpage')->get_url(), $match);
 
@@ -21,7 +22,13 @@ $authCode = $invoker->call(function() use (&$container){
 	return false;
 });
 
-var_dump($authCode);
+$token = $invoker->call(function($authCode) use (&$container){
+	preg_match("#code=(.*?)\&#", $container->get('webpage')->get_url(), $match);
+
+	if (is_array($match) && isset($match[1]))
+		return $match[1];
+	return false;
+});
 
 printf('Hello and bye...');
 $app->run();
