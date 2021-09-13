@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 class AccountController extends Controller {
@@ -11,10 +10,9 @@ class AccountController extends Controller {
 		return !is_null($this->get()->proxy);
 	}
 	
-	public function hasAvatar() {
-		return !is_null($this->get()->avatar);
+	public function hasFingerprint() {
+		return !is_null($this->get()->fingerprint);
 	}
-	
 	
 	public function deactivate() {
 		$this->update(['status' => 0]);

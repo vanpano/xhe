@@ -45,18 +45,31 @@ abstract class LoginMethod extends Method {
 			$cookieController->getUrl(),
 			$cookieController->getValue()
 		);
-
 		
-		/*
-		if ($controller->hasAvatar())
-			$this->initAvatar($controller->getAvatarUserAgent(), $controller->getAvatarLanguage(), $controller->getAvatarFingerprints());
-		else {
-			$controller->assignAvatar($controller->findUnusedAvatar());
-		}
-		*/
-
+		if (!$controller->hasFingerprint()) {
+			$fingerprint = \App\Model\FingerprintBuilder::build();
+			
+			$model = $controller->get();
+			$model->fingerprint = $fingerprint;
+			
+			$controller->set($model);
+			$controller->update(['fingerprintId' => $fingerprint->id]);
+			
+			unset($model);
+		} 
+		
+		$fingerprintController = new \App\Controller\FingerprintController($controller->get()->fingerprint);		
+		$this->container->get('App\Command\BrowserSettings')->initFingerprint([
+			'useragent' => $fingerprintController->getUseragent(), 
+			'language' => $fingerprintController->getLanguage(),
+			'timezone' => $fingerprintController->getTimezone(),
+			'canvas' => $fingerprintController->getCanvas(),
+			'platform' => $fingerprintController->getPlatform(),
+			'plugins' => $fingerprintController->getPlugins()
+		]);
+		
 		if (!$authorized = $this->method($controller->getData())) {
-			$controller->deactivate();
+			//$controller->deactivate();
 			
 			printf("Error during login!\n");
 		} else {
