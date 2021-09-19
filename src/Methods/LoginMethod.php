@@ -46,26 +46,28 @@ abstract class LoginMethod extends Method {
 			$cookieController->getValue()
 		);
 		
-		if (!$controller->hasFingerprint()) {
-			$fingerprint = \App\Model\FingerprintBuilder::build();
+		if (!$controller->hasProfile()) {
+			$profile = \App\Model\ProfileBuilder::buildWithData();
 			
 			$model = $controller->get();
-			$model->fingerprint = $fingerprint;
+			$model->profile = $profile;
 			
 			$controller->set($model);
-			$controller->update(['fingerprintId' => $fingerprint->id]);
+			$controller->update(['profileId' => $profile->id]);
 			
 			unset($model);
 		} 
 		
-		$fingerprintController = new \App\Controller\FingerprintController($controller->get()->fingerprint);		
-		$this->container->get('App\Command\BrowserSettings')->initFingerprint([
-			'useragent' => $fingerprintController->getUseragent(), 
-			'language' => $fingerprintController->getLanguage(),
-			'timezone' => $fingerprintController->getTimezone(),
-			'canvas' => $fingerprintController->getCanvas(),
-			'platform' => $fingerprintController->getPlatform(),
-			'plugins' => $fingerprintController->getPlugins()
+		$profileController = new \App\Controller\ProfileController($controller->get()->profile);
+		$this->container->get('App\Command\BrowserSettings')->initProfile([
+			'useragent' => $profileController->getUseragent(), 
+			'language' => $profileController->getLanguage(),
+			'timezone' => $profileController->getTimezone(),
+			'canvas' => $profileController->getCanvas(),
+			'resolution' => $profileController->getResolution(),
+			'hardware' => $profileController->getHardware(),
+			'audio' => $profileController->getAudio(),
+			'bound' => $profileController->getBound()
 		]);
 		
 		if (!$authorized = $this->method($controller->getData())) {

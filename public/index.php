@@ -15,17 +15,32 @@ if (!$account = App\Model\GoogleAccountBuilder::findUnused())
 
 $invoker->call('App\Method\GoogleLogin', [$controller]);
 
-$authCode = $invoker->call(function() use (&$container){
+$invoker->get('GooglePlaygroundStep3')->setAuthCode($invoker->call(function() use (&$container){
 	preg_match("#code=(.*?)\&#", $container->get('webpage')->get_url(), $match);
 
 	if (is_array($match) && isset($match[1]))
 		return $match[1];
 	return false;
-});
+}));
 
-$token = $invoker->call(function($authCode) use (&$container){
-	var_dump($authCode);
-}, ['authCode' => $authCode]);
+$invoker->get('GooglePlaygroundStep3')->setAccessToken($invoker->call(function() use (&$container) {
+	
+}));
+
+$invoker->get('GooglePlaygroundStep3')->setRefreshToken($invoker->call(function() use (&$container) {
+	
+}));
+
+$invoker->call('GooglePlaygroundStep3', [
+	'requestUri' => 'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxAttendees=1000&sendUpdates=all',
+	'requestUriParams' => '',
+	'requestMethod' => 'POST',
+])
+
+$step3 = $invoker->call('App\Command\InsertGoogleCalendarEventBody', [
+	'body' => ''
+]);
+
 
 
 printf('Hello and bye...');

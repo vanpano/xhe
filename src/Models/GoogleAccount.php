@@ -7,7 +7,7 @@ class GoogleAccount extends Model {
 	protected $dbFields = Array(
 		'proxyId' => Array('int'),
 		'cookieId' => Array('int'),
-		'fingerprintId' => Array('int'),
+		'profileId' => Array('int'),
 		'email' => Array('text', 'required'),
 		'password' => Array('text', 'required'),
 		'rEmail' => Array('text'),
@@ -24,7 +24,7 @@ class GoogleAccount extends Model {
 	protected $relations = Array (
         'proxy' => Array ("hasOne", "App\Model\Proxy", "proxyId"),
         'cookie' => Array("hasOne", "App\Model\Cookie", "cookieId"),
-        'fingerprint' => Array ("hasOne", "App\Model\Fingerprint", "fingerprintId"),
+        'profile' => Array ("hasOne", "App\Model\Profile", "profileId"),
     );
 	
 }

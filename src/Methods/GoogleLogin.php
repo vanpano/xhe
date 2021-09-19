@@ -102,13 +102,16 @@ class GoogleLogin extends LoginMethod {
 	
 	public function isChooseAccountRequired($email) {
 		$this->container->get('browser')->wait();
-		$result = $this->container->get('div')->get_by_attribute('data-email', $email)->is_visibled();
+		$result = $this->container->get('div')->get_by_attribute('data-email', $email)->is_visibled() || 
+		$this->container->get('button')->get_by_value($email, false)->is_visibled();
 		
 		return $result;
 	}
 	
 	public function chooseAccount($email) {
-		$this->container->get('div')->get_by_attribute('data-email', $email)->click();
+		$this->container->get('browser')->wait();
+		$this->container->get('div')->get_by_attribute('data-email', $email)->click() || 
+		$this->container->get('button')->get_by_value($email, false)->click();
 		$this->container->get('browser')->wait();
 	}
 	

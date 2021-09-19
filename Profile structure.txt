@@ -1,0 +1,18 @@
+UserAgent
+TimeZone
+Language
+Resolution
+	ScreenWidth
+	ScreenHeight
+	ScreenPixelDepth
+	BrowserWidth
+	BrowserHeight
+Hardware
+	Concurrency
+	DeviceMemory
+	DevicePixelRatio
+Canvas (Noise)
+Bound (Noise)
+Audio
+	Noise
+	Frequency

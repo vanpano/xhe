@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-class FingerprintController extends Controller {	
+class ProfileController extends Controller {
 	public function getUseragent() {
 		return $this->get()->useragent;
 	}
@@ -18,13 +18,19 @@ class FingerprintController extends Controller {
 		return $this->get()->canvas;
 	}
 	
-	public function getPlatform() {
-		return $this->get()->platform;
+	public function getResolution() {
+		return $this->get()->resolution;
 	}
 	
-	public function getPlugins() {
-		return $this->get()->plugins;
+	public function getHardware() {
+		return $this->get()->hardware;
 	}
 	
+	public function getAudio() {
+		return $this->get()->audio;
+	}
+	
+	public function getBound() {
+		return $this->get()->bound;
+	}
 }
-	

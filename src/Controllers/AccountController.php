@@ -10,8 +10,8 @@ class AccountController extends Controller {
 		return !is_null($this->get()->proxy);
 	}
 	
-	public function hasFingerprint() {
-		return !is_null($this->get()->fingerprint);
+	public function hasProfile() {
+		return !is_null($this->get()->profile);
 	}
 	
 	public function deactivate() {
