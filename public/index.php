@@ -6,7 +6,7 @@ $app = new Silly\Application();
 $app->useContainer($container, $injectWithTypeHint = true);
 $invoker = new Invoker\Invoker(null, $container);
 
-$container->set('client', \DI\create('Xhe\Client')->constructor('127.0.0.1', 7010));
+$container->set('client', \DI\create('Xhe\Client')->constructor('127.0.0.1', 7011));
 
 if (!$account = App\Model\GoogleAccountBuilder::findUnused())
 	die('No accounts...');
@@ -15,7 +15,7 @@ if (!$account = App\Model\GoogleAccountBuilder::findUnused())
 
 $invoker->call('App\Method\GoogleLogin', [$controller]);
 
-$invoker->get('GooglePlaygroundStep3')->setAuthCode($invoker->call(function() use (&$container){
+$container->get('App\Command\GooglePlaygroundStep3')->setAuthCode($invoker->call(function() use (&$container){
 	preg_match("#code=(.*?)\&#", $container->get('webpage')->get_url(), $match);
 
 	if (is_array($match) && isset($match[1]))
@@ -23,13 +23,22 @@ $invoker->get('GooglePlaygroundStep3')->setAuthCode($invoker->call(function() us
 	return false;
 }));
 
-$invoker->get('GooglePlaygroundStep3')->setAccessToken($invoker->call(function() use (&$container) {
-	
-}));
+$invoker->call('App\Command\ExchangeTokens');
+$container->get('App\Command\GooglePlaygroundStep3')->setRefreshToken($invoker->call('App\Command\GetRefreshToken'));
+$container->get('App\Command\GooglePlaygroundStep3')->setAccessToken($invoker->call('App\Command\GetAccessToken'));
+$invoker->call('App\Command\GooglePlaygroundStep3', [
+	'requestUri' => 'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxAttendees=1000&sendUpdates=all',
+	'requestMethod' => 'POST',
+	'requestBody' => json_encode([
+		'summary' => 'Hello World!',
+		'description' => 'Hello!!!!'
+	])
+]);
 
-$invoker->get('GooglePlaygroundStep3')->setRefreshToken($invoker->call(function() use (&$container) {
-	
-}));
+/*
+printf("Auth code\n%s\n\n", $container->get('App\Command\GooglePlaygroundStep3')->getAuthCode());
+printf("Access token\n%s\n\n", $container->get('App\Command\GooglePlaygroundStep3')->getAccessToken());
+printf("Refresh token\n%s\n\n", $container->get('App\Command\GooglePlaygroundStep3')->getRefreshToken());
 
 $invoker->call('GooglePlaygroundStep3', [
 	'requestUri' => 'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxAttendees=1000&sendUpdates=all',
@@ -41,7 +50,7 @@ $step3 = $invoker->call('App\Command\InsertGoogleCalendarEventBody', [
 	'body' => ''
 ]);
 
-
+*/
 
 printf('Hello and bye...');
 $app->run();

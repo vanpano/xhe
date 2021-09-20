@@ -3,6 +3,14 @@
 use \Psr\Container\ContainerInterface;
 
 return [
+	App\Command\GetAccessToken::class => (function(ContainerInterface $c) {
+		return new \App\Command\GetAccessToken($c);
+	}),
+
+	App\Command\GetRefreshToken::class => (function(ContainerInterface $c) {
+		return new \App\Command\GetRefreshToken($c);
+	}),
+
 	'App\Command\GooglePlaygroundStep3' => (function(ContainerInterface $c) {
 		return new \App\Command\GooglePlaygroundStep3($c);
 	}),

@@ -5,7 +5,7 @@ namespace App\Model;
 use \dbObject;
 
 class Proxy extends \dbObject {
-	protected $dbTable = "proxiez";
+	protected $dbTable = "proxies";
 	protected $primaryKey = "id";
 	protected $dbFields = Array(
 		'ip' => Array('text', 'required'),
@@ -19,10 +19,5 @@ class Proxy extends \dbObject {
 		'used' => Array('int'),
 		'status' => Array('bool')
 	);
-	
-	/*
-	protected $relations = Array (
-        'accounts' => Array ("hasMany", "GoogleAccount", 'proxyId')
-    );
-	*/
+
 }
