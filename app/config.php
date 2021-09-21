@@ -11,6 +11,10 @@ return [
 		return new \App\Command\GetRefreshToken($c);
 	}),
 
+	'App\Command\GooglePlaygroundStep1' => (function(ContainerInterface $c) {
+		return new \App\Command\GooglePlaygroundStep1($c);
+	}),
+
 	'App\Command\GooglePlaygroundStep3' => (function(ContainerInterface $c) {
 		return new \App\Command\GooglePlaygroundStep3($c);
 	}),
@@ -51,8 +55,8 @@ return [
 		return new \App\Command\SetPlatform($c);
 	}),
 
-	App\Method\GoogleLogin::class => (function(ContainerInterface $c) {
-		return new \App\Method\GoogleLogin($c);
+	App\Method\GooglePlaygroundLogin::class => (function(ContainerInterface $c) {
+		return new \App\Method\GooglePlaygroundLogin($c);
 	}),
 	
 	'App\Command\BrowserSettings' => (function(ContainerInterface $c) {
@@ -165,6 +169,10 @@ return [
 	
 	'mouse' => function (ContainerInterface $c) {
         return $c->make('Xhe\XheMouse', ['server' => $c->get('client')]);
+    },
+	
+	'raw' => function (ContainerInterface $c) {
+        return $c->make('Xhe\XheRaw', ['server' => $c->get('client')]);
     },
 	
 	'application' => function (ContainerInterface $c) {

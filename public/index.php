@@ -6,51 +6,51 @@ $app = new Silly\Application();
 $app->useContainer($container, $injectWithTypeHint = true);
 $invoker = new Invoker\Invoker(null, $container);
 
-$container->set('client', \DI\create('Xhe\Client')->constructor('127.0.0.1', 7011));
+$container->set('client', \DI\create('Xhe\Client')->constructor('127.0.0.1', 7010));
 
 if (!$account = App\Model\GoogleAccountBuilder::findUnused())
 	die('No accounts...');
 
-($controller = (new App\Controller\GoogleAccountController()))->set($account);
+$controller = (new App\Controller\GoogleAccountController());
+$controller->set($account);
 
-$invoker->call('App\Method\GoogleLogin', [$controller]);
+if (!$step1 = $invoker->call('App\Method\GooglePlaygroundLogin', [$controller]))
+	die('Login error :(');
 
-$container->get('App\Command\GooglePlaygroundStep3')->setAuthCode($invoker->call(function() use (&$container){
-	preg_match("#code=(.*?)\&#", $container->get('webpage')->get_url(), $match);
-
-	if (is_array($match) && isset($match[1]))
-		return $match[1];
-	return false;
-}));
-
-$invoker->call('App\Command\ExchangeTokens');
-$container->get('App\Command\GooglePlaygroundStep3')->setRefreshToken($invoker->call('App\Command\GetRefreshToken'));
-$container->get('App\Command\GooglePlaygroundStep3')->setAccessToken($invoker->call('App\Command\GetAccessToken'));
-$invoker->call('App\Command\GooglePlaygroundStep3', [
+$step2 = $container->get('App\Command\GooglePlaygroundStep3')->credentials();
+$step3 = $invoker->call('App\Command\GooglePlaygroundStep3', [
 	'requestUri' => 'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxAttendees=1000&sendUpdates=all',
 	'requestMethod' => 'POST',
 	'requestBody' => json_encode([
-		'summary' => 'Hello World!',
-		'description' => 'Hello!!!!'
+		'summary' => 'Reminders test LAST',
+		'description' => 'Just a test',
+		'location' => 'Ukraine, Kiev', 
+		'start' => [
+			'dateTime' => '2021-09-20T18:10:00',
+			'timeZone' => 'Europe/Kiev'
+		],
+		'end' => [
+			'dateTime' => '2021-09-20T19:10:00',
+			'timeZone' => 'Europe/Kiev'
+		],
+		'attendees' => [
+			[
+				'email' => 'cockpit.eden@gmail.com',
+				'responseStatus' => 'accepted'
+			],
+			[
+				'email' => 'wizard.folkway@gmail.com',
+				'responseStatus' => 'accepted'
+			],
+			[
+				'email' => 'gandalf@alterpost.org',
+				'responseStatus' => 'accepted'
+			],
+		],
+		'visibility' => 'public'
 	])
 ]);
 
-/*
-printf("Auth code\n%s\n\n", $container->get('App\Command\GooglePlaygroundStep3')->getAuthCode());
-printf("Access token\n%s\n\n", $container->get('App\Command\GooglePlaygroundStep3')->getAccessToken());
-printf("Refresh token\n%s\n\n", $container->get('App\Command\GooglePlaygroundStep3')->getRefreshToken());
-
-$invoker->call('GooglePlaygroundStep3', [
-	'requestUri' => 'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxAttendees=1000&sendUpdates=all',
-	'requestUriParams' => '',
-	'requestMethod' => 'POST',
-])
-
-$step3 = $invoker->call('App\Command\InsertGoogleCalendarEventBody', [
-	'body' => ''
-]);
-
-*/
-
 printf('Hello and bye...');
+
 $app->run();

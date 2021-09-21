@@ -7,6 +7,23 @@ class GooglePlaygroundStep3 extends Command {
 	public $refreshToken;
 	public $accessToken;
 	
+	public function credentials() {
+		$container = $this->container;
+		
+		$this->setAuthCode($container->call(function() use (&$container) {
+			preg_match("#code=(.*?)\&#", $container->get('webpage')->get_url(), $match);
+
+			if (is_array($match) && isset($match[1]))
+				return $match[1];
+			return false;
+		}));
+		
+		$this->container->call('App\Command\ExchangeTokens'); 
+		
+		$this->setRefreshToken($container->call('App\Command\GetRefreshToken'));
+		$this->setAccessToken($container->call('App\Command\GetAccessToken'));
+	}
+	
 	public function setAuthCode($authCode) {
 		$this->authCode = $authCode;
 	}

@@ -5,7 +5,7 @@ namespace App\Model;
 use \dbObject;
 
 class Proxy extends \dbObject {
-	protected $dbTable = "proxies";
+	protected $dbTable = "proxiez";
 	protected $primaryKey = "id";
 	protected $dbFields = Array(
 		'ip' => Array('text', 'required'),
