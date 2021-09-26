@@ -102,14 +102,20 @@ class GooglePlaygroundLogin extends LoginMethod {
 	}
 	
 	public function isChooseAccountRequired($email) {
+		if (!preg_match("#@gmail\.com#", $email))
+			$email .= '@gmail.com';
+		
 		$this->container->get('browser')->wait();
-		$result = $this->container->get('div')->get_by_attribute('data-email', $email)->is_visibled() || 
-		$this->container->get('button')->get_by_value($email, false)->is_visibled();
+		$result = $this->container->get('div')->get_by_attribute('data-email', strtolower($email))->is_visibled() || 
+		$this->container->get('button')->get_by_value(strtolower($email), false)->is_visibled();
 		
 		return $result;
 	}
 	
 	public function chooseAccount($email) {
+		if (!preg_match("#@gmail\.com#", $email))
+			$email .= '@gmail.com';
+		
 		$this->container->get('browser')->wait();
 		$this->container->get('div')->get_by_attribute('data-email', strtolower($email), false)->click() || 
 		$this->container->get('button')->get_by_value(strtolower($email), false)->click();

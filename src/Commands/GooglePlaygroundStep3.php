@@ -58,9 +58,15 @@ class GooglePlaygroundStep3 extends Command {
 		$this->container->get('anchor')->get_by_id('requestBodyButton')->click();
 		$this->container->get('browser')->wait();
 		
+		//$this->container->get('window')->execute_open_file("File Upload", trim($requestFile), "&Открыть", false, true);
+		//$this->container->get('inputfile')->get_by_number(0)->send_mouse_click();
+		
+		$this->container->get('anchor')->get_by_id('requestBodyButton')->click();
+		$this->container->get('browser')->wait();
+		
 		$this->container->get('textarea')->get_by_id('postData')->set_value($requestBody);
 		$this->container->get('browser')->wait();
-
+	
 		$this->container->get('button')->get_by_id('sendRequestButton')->click();
 		$this->container->get('browser')->wait();
 	}

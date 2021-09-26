@@ -10,7 +10,8 @@
 			"App\\Command\\": "src/Commands/",
 			"App\\Model\\": "src/Models/",
 			"App\\Controller\\": "src/Controllers/",
-			"App\\Method\\": "src/Methods/"
+			"App\\Method\\": "src/Methods/",
+			"App\\Classes\\": "src/Classes/"
         }
     },
     "require": {

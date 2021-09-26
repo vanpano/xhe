@@ -3,7 +3,8 @@ namespace App\Command;
 
 class BrowserSettings extends Command {
 	public function initCookie($url, $value) {
-		$this->container->call(\App\Command\ClearCookies::class);
+		//$this->container->call(\App\Command\ClearCookies::class);
+		$this->container->call(\App\Command\Vanish::class);
 		$this->container->call(\App\Command\SetCookieForUrl::class, ['url' => $url, 'entry' => $value]);
 	}
 	

@@ -175,6 +175,14 @@ return [
         return $c->make('Xhe\XheRaw', ['server' => $c->get('client')]);
     },
 	
+	'window' => function (ContainerInterface $c) {
+        return $c->make('Xhe\XheWindow', ['server' => $c->get('client')]);
+    },
+	
+	'inputfile' => function (ContainerInterface $c) {
+        return $c->make('Xhe\XheInputfile', ['server' => $c->get('client')]);
+    },
+	
 	'application' => function (ContainerInterface $c) {
         return $c->make('Xhe\XheApplication', ['server' => $c->get('client')]);
     }
