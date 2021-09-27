@@ -29,7 +29,8 @@ class ProfileBuilder {
 				'deviceMemory' => mt_rand(1, 12),
 				'devicePixelRatio' => 24
 			])),
-			'useragent' => 'Mozilla/5.0 (Windows NT 6.1; rv:68.7) Gecko/20100101 Firefox/68.7',
+			'useragent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:77.0) Gecko/20190101 Firefox/77.0',
+			//'Mozilla/5.0 (Windows NT 6.1; rv:68.7) Gecko/20100101 Firefox/68.7',
 			'language' => 'ru',
 			'timezone' => '-3'
 		]);

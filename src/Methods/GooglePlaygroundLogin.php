@@ -29,6 +29,7 @@ class GooglePlaygroundLogin extends LoginMethod {
 			}
 			
 			if ($this->isLoggedIn()) {
+				printf("Logged in successfully as %s!\n", $email);
 				return true;
 			}
 		}
@@ -55,6 +56,9 @@ class GooglePlaygroundLogin extends LoginMethod {
 		}
 		
 		if ($this->isPhoneVerificationRequired()) {
+			printf("Phone verification required!\n");
+			return false;
+			
 			//$phone = App\Service\OnlineSim::buyPhone('google');
 			$phone = '';
 			$this->inputPhoneRequired($phone);
@@ -67,7 +71,6 @@ class GooglePlaygroundLogin extends LoginMethod {
 		
 		if ($this->isDeviceVerificationRequired()) {
 			printf("Device verification required!\n");
-			
 			return false;
 		}
 		
@@ -82,7 +85,13 @@ class GooglePlaygroundLogin extends LoginMethod {
 			$this->submitAllowConsentForm();
 		}
 		
-		return $this->isLoggedIn();
+		if ($this->isLoggedIn()) {
+			printf("Logged in successfully as %s!\n", $email);
+			return true;
+		} else {
+			printf("Error during login as %s!\n", $email);
+			return false;
+		}
 	}
 	
 	public function chooseREmailChallenge() {
@@ -102,8 +111,10 @@ class GooglePlaygroundLogin extends LoginMethod {
 	}
 	
 	public function isChooseAccountRequired($email) {
+		/*
 		if (!preg_match("#@gmail\.com#", $email))
 			$email .= '@gmail.com';
+		*/
 		
 		$this->container->get('browser')->wait();
 		$result = $this->container->get('div')->get_by_attribute('data-email', strtolower($email))->is_visibled() || 
@@ -113,9 +124,10 @@ class GooglePlaygroundLogin extends LoginMethod {
 	}
 	
 	public function chooseAccount($email) {
+		/*
 		if (!preg_match("#@gmail\.com#", $email))
 			$email .= '@gmail.com';
-		
+		*/
 		$this->container->get('browser')->wait();
 		$this->container->get('div')->get_by_attribute('data-email', strtolower($email), false)->click() || 
 		$this->container->get('button')->get_by_value(strtolower($email), false)->click();
@@ -158,8 +170,19 @@ class GooglePlaygroundLogin extends LoginMethod {
 		$this->skipRecovery();
 		$this->skipFeatures();
 		
-		if(preg_match("#code=#", $this->container->get('webpage')->get_url()))
+		$this->container->get('browser')->wait();
+		$url = $this->container->get('webpage')->get_url();
+		$this->container->get('browser')->wait();
+		
+		if(preg_match("#code=#", $url)) {
 			return true;
+		} else {
+			if (!$this->container->get('browser')->check_connection($url,30)) {
+				$this->container->get('browser')->wait();
+				
+				printf("Connection issue!\n");
+			}
+		}
 	}
 	
 	public function isEmailFormVisibled() {
@@ -197,6 +220,8 @@ class GooglePlaygroundLogin extends LoginMethod {
 	}
 	
 	public function isReserveEmailRequired() {
+		$this->container->get('browser')->wait();
+		
 		if(preg_match("#challenge\/selection#", $this->container->get('webpage')->get_url()))
 			return true;
 	}
@@ -204,11 +229,13 @@ class GooglePlaygroundLogin extends LoginMethod {
 	public function inputReserveEmail($reserveEmail) {
 		$this->container->get('input')->get_by_id('knowledge-preregistered-email-response', false)->send_input($reserveEmail);
 		$this->container->get('browser')->wait();
+		$this->container->get('browser')->wait_js();
 	}
 	
 	public function submitReserveEmailForm() {
 		$this->container->get('button')->get_by_number(0)->click();
 		$this->container->get('browser')->wait();
+		$this->container->get('browser')->wait_js();
 	}
 	
 	public function isPhoneRequired() {
@@ -253,6 +280,9 @@ class GooglePlaygroundLogin extends LoginMethod {
 	public function submitAllowConsentForm() {
 		$this->container->get('div')->get_by_id('submit_approve_access', false)->click();
 		$this->container->get('browser')->wait();
+		$this->container->get('browser')->wait_js();
+		
+		
 	}
 	
 	public function allowConsent() {		

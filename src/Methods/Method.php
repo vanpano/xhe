@@ -2,14 +2,9 @@
 
 namespace App\Method;
 
-abstract class Method {
-	public $container;
-	
-	function __construct($container) {
-		$this->container = $container;
-		//$this->before();
-	}
-	
+use App\Command\Command as Command;
+
+abstract class Method extends Command {
 	function before() {
 		$this->container->get('browser')->navigate('http://localhost/dashboard/');
 		$this->container->get('browser')->wait();

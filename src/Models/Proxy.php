@@ -2,18 +2,15 @@
 
 namespace App\Model;
 
-use \dbObject;
-
-class Proxy extends \dbObject {
+class Proxy extends Model {
 	protected $dbTable = "proxiez";
 	protected $primaryKey = "id";
 	protected $dbFields = Array(
-		'ip' => Array('text', 'required'),
+		'ip' => Array('text'),
 		'port' => Array('int'),
 		'login' => Array('text'),
 		'password' => Array('text'),
 		'language' => Array('text'),
-		'createdAt' => Array('datetime'),
 		'updatedAt' => Array('datetime'),
 		'deactivatedAt' => Array('datetime'),
 		'used' => Array('int'),

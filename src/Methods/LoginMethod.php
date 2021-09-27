@@ -2,32 +2,9 @@
 namespace App\Method;
 
 abstract class LoginMethod extends Method {
-
 	function __invoke($controller) {
 		$controller->working(1);
 		
-		if (!$controller->hasProxy()) {
-			$proxy = \App\Model\ProxyBuilder::findUnused();
-			if (!is_null($proxy)) {
-
-				$model = $controller->get();
-				$model->proxy = $proxy;
-				
-				$controller->set($model);
-				$controller->update(['proxyId' => $proxy->id]);
-				
-				unset($model);
-				
-				$proxyController = new \App\Controller\ProxyController($controller->get()->proxy);
-				$this->container->get('App\Command\BrowserSettings')->initProxy(
-					$proxyController->getIp(), 
-					$proxyController->getPort(),
-					$proxyController->getLogin(),
-					$proxyController->getPassword(),
-				);
-			} 
-		}
-
 		if (!$controller->hasCookies()) {
 			$cookie = \App\Model\CookieBuilder::buildWithUrl($this->url);
 			
@@ -39,12 +16,39 @@ abstract class LoginMethod extends Method {
 			
 			unset($model);
 		} 
-		
+
 		$cookieController = new \App\Controller\CookieController($controller->get()->cookie);		
 		$this->container->get('App\Command\BrowserSettings')->initCookie(
 			$cookieController->getUrl(),
 			$cookieController->getValue()
 		);
+		
+		if (!$controller->hasProxy()) {
+			$proxy = \App\Model\ProxyBuilder::findUnused();
+			if (!is_null($proxy)) {
+
+				$model = $controller->get();
+				$model->proxy = $proxy;
+				
+				$controller->set($model);
+				$controller->update(['proxyId' => $proxy->id]);
+				
+				$proxy->used += 1;
+				$proxy->save();
+				
+				unset($model);
+			}
+		}
+		
+		if (!is_null($controller->get()->proxy)) {
+			$proxyController = new \App\Controller\ProxyController($controller->get()->proxy);
+			$this->container->get('App\Command\BrowserSettings')->initProxy(
+				$proxyController->getIp(), 
+				$proxyController->getPort(),
+				$proxyController->getLogin(),
+				$proxyController->getPassword(),
+			);
+		}
 		
 		if (!$controller->hasProfile()) {
 			$profile = \App\Model\ProfileBuilder::buildWithData();
@@ -72,16 +76,12 @@ abstract class LoginMethod extends Method {
 		
 		if (!$authorized = $this->method($controller->getData())) {
 			//$controller->deactivate();
-			
-			printf("Error during login!\n");
 		} else {
 			$controller->onLogin();
 			//$cookieController->setUrl($this->container->get('webpage')->get_url());
 			$value = $this->container->call('App\Command\GetCookie');
 			
 			$cookieController->setValue($value);
-			
-			printf("Logged in successfully!\n");
 		}
 		
 		$controller->used();

@@ -4,7 +4,11 @@ namespace App\Controller;
 class GoogleAccountController extends AccountController {
 	
 public function getEmail() {
-		return $this->get()->email;
+		$email = strtolower($this->get()->email);
+		if (!preg_match("#@#", $email))
+			$email .= '@gmail.com';
+			
+		return $email;
 	}
 	
 	public function getPassword() {
