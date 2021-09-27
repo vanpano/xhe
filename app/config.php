@@ -1,8 +1,14 @@
 <?php
 
 use \Psr\Container\ContainerInterface;
+use \Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use \Symfony\Component\Filesystem\Filesystem;
 
 return [
+	'filesystem' => (function(ContainerInterface $c) {
+		return new Filesystem();
+	}),
+
 	App\Command\GetAccessToken::class => (function(ContainerInterface $c) {
 		return new \App\Command\GetAccessToken($c);
 	}),

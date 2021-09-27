@@ -1,5 +1,7 @@
 <?php
 
+
+
 $container = require(__DIR__ . '/../app/bootstrap.php');
 
 $app = new Silly\Application();
@@ -12,6 +14,9 @@ $app->command('events:insert [ip] [port]', function($ip, $port) use (&$container
 	$controller = (new App\Controller\GoogleAccountController());
 	
 	do {
+		$container->get('filesystem')->remove(XHE_DIR . DIRECTORY_SEPARATOR . $port);
+		
+		
 		if (!$account = App\Model\GoogleAccountBuilder::findUnused()) {
 			die('No accounts...');
 		} else {$controller->set($account);}
@@ -23,7 +28,8 @@ $app->command('events:insert [ip] [port]', function($ip, $port) use (&$container
 			rename($event, EVENTS_WORKING_DIR . DIRECTORY_SEPARATOR . basename($event));
 			$event = str_replace('unpublished', 'working', $event);
 		}
-
+		
+		
 		if (!$step1 = $invoker->call('App\Method\GooglePlaygroundLogin', [$controller]))
 			die('Login error :(');
 		else {
