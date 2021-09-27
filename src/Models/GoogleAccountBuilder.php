@@ -21,7 +21,7 @@ class GoogleAccountBuilder {
 	}
 		
 	public static function findUnused() {
-		if (!is_null($model = Account::where('status', 1)::where('working', 0)::where('used', 0)::orderBy('id', 'desc')::getOne()))
+		if (!is_null($model = Account::where('status', 1)::where('working', 0)::groupBy('used')::getOne()))
 		//if (!is_null($model = Account::where('status', 1)::where('working', 0)::groupBy('used')::getOne()))
 			return $model;
 		return false;

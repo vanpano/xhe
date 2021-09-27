@@ -254,8 +254,8 @@ class XheApplication extends XheApplicationCompatible
 		  if ($message=="")
 		  	echo $message;
 		  $this->finished=true;
-		  usleep(1000000);
-		  die("app@exit");
+		  //usleep(1000000);
+		  //die("app@exit");
 		  return $res;
 		}
 

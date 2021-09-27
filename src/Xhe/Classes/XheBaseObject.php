@@ -64,7 +64,7 @@ class XheBaseObject {
 				break;
 		}
 			
-		$bClosePHPIfNotConnected = true;
+		$bClosePHPIfNotConnected = false;
 		$bWarningPHPIfNotConnected = false;
 		if ($bClosePHPIfNotConnected===true && $html===false)
 		{

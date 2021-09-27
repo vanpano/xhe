@@ -2,6 +2,8 @@
 namespace App\Command;
 
 class BrowserSettings extends Command {
+	public $output = [];
+	
 	public function initCookie($url, $value) {
 		//$this->container->call(\App\Command\ClearCookies::class);
 		$this->container->call(\App\Command\Vanish::class);
@@ -9,45 +11,48 @@ class BrowserSettings extends Command {
 	}
 	
 	public function initProxy($ip, $port, $login, $password) {
-		$this->container->call(\App\Command\DisableProxy::class);
-		$this->container->call(\App\Command\EnableProxy::class, ['ip' => $ip, 'port' => $port, 'login' => $login, 'pass' => $password]);
+		//$this->container->call(\App\Command\DisableProxy::class);
+		//$this->container->call(\App\Command\EnableProxy::class, ['ip' => $ip, 'port' => $port, 'login' => $login, 'pass' => $password]);
+		$this->output = array_merge($this->output, [
+			"Proxy" => $ip . ":" . $port,
+			"ProxyLogin" => $login,
+			"ProxyPassword" => $password
+		]);
 	}
 	
 	public function initProfile($data) {
 		extract($data);
 		
-		$output = [];
-		
 		if (isset($useragent) && !is_null($useragent)) {
-			$output = array_merge($output, [
+			$this->output = array_merge($this->output, [
 				"UserAgent" => $useragent
 			]);
 			//$this->container->call(\App\Command\SetUseragent::class, ['useragent' => $useragent]);
 		}
 		
 		if (isset($language) && !is_null($language)) {
-			$output = array_merge($output, [
+			$this->output = array_merge($this->output, [
 				"BrowserLanguage" => $language
 			]);
 			//$this->container->call(\App\Command\SetLanguage::class, ['language' => $language]);
 		}
 		
 		if (isset($timezone)  && !is_null($timezone)) {
-			$output = array_merge($output, [
+			$this->output = array_merge($this->output, [
 				"TimeZone" => $timezone
 			]);
 			//$this->container->call(\App\Command\SetTimezone::class, ['timezone' => $timezone]);
 		}
 		
 		if (isset($canvas)  && !is_null($canvas)) {
-			$output = array_merge($output, [
+			$this->output = array_merge($this->output, [
 				"CanvasNoise" => $canvas
 			]);
 			//$this->container->call(\App\Command\SetCanvas::class, ['canvas' => $canvas]);
 		}
 		
 		if (isset($resolution)  && !is_null($resolution)) {
-			$output = array_merge($output, [
+			$this->output = array_merge($this->output, [
 				"BrowserWidth" => (isset($resolution->browserWidth) ? $resolution->browserWidth : 1400),
 				"BrowserHeight" => (isset($resolution->browserHeight) ? $resolution->browserHeight : 900),
 				"ScreenWidth" => (isset($resolution->screenWidth) ? $resolution->screenWidth : 1400),
@@ -63,7 +68,7 @@ class BrowserSettings extends Command {
 		}
 		
 		if (isset($hardware)  && !is_null($hardware)) {
-			$output = array_merge($output, [
+			$this->output = array_merge($this->output, [
 				"HardwareConcurrency" => (isset($hardware->concurrency) ? $hardware->concurrency : 4),
 				"DeviceMemory" => (isset($hardware->deviceMemory) ? $hardware->deviceMemory : 24),
 				"DevicePixelRatio" => (isset($hardware->devicePixelRatio) ? $hardware->devicePixelRatio : "-1"),
@@ -72,7 +77,7 @@ class BrowserSettings extends Command {
 		}
 		
 		if (isset($audio)  && !is_null($audio)) {
-			$output = array_merge($output, [
+			$this->output = array_merge($this->output, [
 				"AudioNoise" => $audio->noise,
 				"FrequencyNoise" => $audio->frequency,
 			]);
@@ -85,7 +90,7 @@ class BrowserSettings extends Command {
 		}
 		
 		if (isset($bound) && !is_null($bound)) {
-			$output = array_merge($output, [
+			$this->output = array_merge($this->output, [
 				"BoundNoise" => $bound
 			]);
 			/*
@@ -95,7 +100,7 @@ class BrowserSettings extends Command {
 			*/
 		}
 		
-		file_put_contents(($path = PROFILE_DIR . DIRECTORY_SEPARATOR . 'profile.json'), json_encode($output));
+		file_put_contents(($path = PROFILE_DIR . DIRECTORY_SEPARATOR . 'profile.json'), json_encode($this->output));
 		$this->container->call(\App\Command\LoadProfile::class, ['path' => $path]);
 	}
 }

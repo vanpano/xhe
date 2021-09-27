@@ -22,8 +22,7 @@ class GooglePlaygroundStep3 extends Command {
 		}));
 		
 		
-		$this->container->get('browser')->navigate('https://localhost/dashboard');
-		$this->container->get('browser')->enable_images(false, true);
+		$this->container->get('browser')->navigate('about:blank');
 		
 		$this->container->get('browser')->navigate('https://developers.google.com/oauthplayground?code=' . $this->getAuthCode() . '&scope=https://www.googleapis.com/auth/calendar.events&https://www.googleapis.com/auth/calendar');
 		$this->container->get('browser')->wait();
@@ -66,8 +65,6 @@ class GooglePlaygroundStep3 extends Command {
 		$this->container->get('browser')->navigate('https://localhost/dashboard');
 		$this->container->get('browser')->navigate($url);
 		$this->container->get('browser')->wait();
-		$this->container->get('browser')->wait_js();
-		sleep(1);
 		
 		$this->container->get('anchor')->get_by_id('requestBodyButton')->click();
 		$this->container->get('browser')->wait();
@@ -124,7 +121,6 @@ class GooglePlaygroundStep3 extends Command {
 		
 		for($i = 0; $i < 30, $this->container->get('div')->get_by_id("waitingWheel", false)->is_visibled(); $i++) {
 			$this->container->get('browser')->wait();
-			$this->container->get('browser')->wait_js();
 			sleep(1);
 		}
 	}
