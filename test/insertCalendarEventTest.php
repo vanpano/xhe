@@ -50,12 +50,6 @@ $app->command('test:test [ip] [port]', function($ip, $port) use (&$container, &$
 				case 200: 
 					printf("Calendar list rule was inserted successfully!\n"); 
 					break;
-				case 400: 
-					printf("Bad calendar list rule request!\n"); 
-					break;
-				case 401: 
-					printf("Invalid client!\n"); 
-					break;
 				default: printf("Code undefined...\n"); break;
 			endswitch;
 
@@ -66,12 +60,6 @@ $app->command('test:test [ip] [port]', function($ip, $port) use (&$container, &$
 			])):
 				case 200: 
 					printf("ACL rule was inserted successfully!\n"); 
-					break;
-				case 400: 
-					printf("Bad ACL rule request!\n"); 
-					break;
-				case 401: 
-					printf("Invalid client!\n"); 
 					break;
 				default: printf("Code undefined...\n"); break;
 			endswitch;
