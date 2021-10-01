@@ -6,7 +6,7 @@ $app = new Silly\Application();
 $app->useContainer($container, $injectWithTypeHint = true);
 $invoker = new Invoker\Invoker(null, $container);
 
-$data = file('C:\Users\user741\Downloads\Proxy-27-09-2021-1.txt', FILE_IGNORE_NEW_LINES);
+$data = file('C:\Users\user741\Downloads\Proxy-30-09-2021.txt', FILE_IGNORE_NEW_LINES);
 
 if (!is_array($data) || empty($data))
 	die();

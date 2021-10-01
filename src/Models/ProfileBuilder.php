@@ -13,10 +13,11 @@ class ProfileBuilder {
 		$model->update([
 			'canvas' => mt_rand(99999,999999),
 			'audio' => json_decode(json_encode([
-				'noise' => mt_rand(99999,999999),
+				'noise' => 111111 * mt_rand(1,9),
 				'frequency' => mt_rand(1,99)
 			])),
 			'bound' => mt_rand(99999,999999),
+			
 			'resolution' => json_decode(json_encode([
 				'screenWidth' => mt_rand(1400,1600),
 				'screenHeight' => mt_rand(1000,1224),
@@ -24,9 +25,11 @@ class ProfileBuilder {
 				'browserWidth' => mt_rand(1000,1300),
 				'browserHeight' => mt_rand(800, 1000),
 			])),
+			
 			'hardware' => json_decode(json_encode([
 				'concurrency' => mt_rand(1,6) * 2,
-				'deviceMemory' => mt_rand(1, 12),
+				'deviceMemory' => 6,
+				//mt_rand(1, 3) * 2,
 				'devicePixelRatio' => 24
 			])),
 			'useragent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:77.0) Gecko/20190101 Firefox/77.0',

@@ -18,6 +18,7 @@
         "php-di/php-di": "^6.2",
 		"mnapoli/silly": "^1.7",
         "thingengineer/mysqli-database-class": "dev-master",
-        "symfony/filesystem": "^5.3"
+        "symfony/filesystem": "^5.3",
+		"s00d/onlinesim-api": "*"
 	}
 }

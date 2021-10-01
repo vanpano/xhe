@@ -2,6 +2,9 @@
 
 namespace App\Method;
 
+use App\Classes\OnlineSim;
+use \s00d\OnlineSimApi\OnlineSimApi as OnlineSimApi;
+
 class GooglePlaygroundLogin extends LoginMethod {
 	public $url = 'https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?redirect_uri=https%3A%2F%2Fdevelopers.google.com%2Foauthplayground&prompt=consent&response_type=code&client_id=407408718192.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events&access_type=offline&flowName=GeneralOAuthFlow';
 	
@@ -55,18 +58,23 @@ class GooglePlaygroundLogin extends LoginMethod {
 			$this->submitPhoneForm();
 		}
 		
-		if ($this->isPhoneVerificationRequired()) {
-			printf("Phone verification required!\n");
+		if ($this->isSmsVerificationRequired()) {
+			printf("Sms verification required!\n");
 			return false;
+		}
+		
+		if ($this->isPhoneVerificationRequired()) {
+			$api = new \App\Classes\OnlineSim(new OnlineSimApi($key = '43b2021bb131e7816e02e1260f655e0d', 'RU'));
+			$tzid = ($api->getTzid('google')['tzid']);
 			
-			//$phone = App\Service\OnlineSim::buyPhone('google');
-			$phone = '';
+			$phone = $api->getNumByTzid($tzid)['number'];
 			$this->inputPhoneRequired($phone);
 			$this->submitPhoneRequiredForm();
 			
-			$sms = App\Service\OnlineSim::getSms($phone);
+			$sms = $api->getSms($tzid);
 			$this->inputSms($sms);
 			$this->submitSmsForm();
+			sleep(3);
 		}
 		
 		if ($this->isDeviceVerificationRequired()) {
@@ -94,7 +102,15 @@ class GooglePlaygroundLogin extends LoginMethod {
 		}
 	}
 	
+	public function isSmsVerificationRequired() {
+		if (preg_match("#challenge\/password\/empty#", $this->container->get('webpage')->get_url()))
+			return true;
+		return false;
+	}
+	
 	public function chooseREmailChallenge() {
+		sleep(1);
+		$this->container->get('browser')->wait();
 		$this->container->get('div')->get_by_attribute('data-challengetype', '12', false)->click();
 		$this->container->get('browser')->wait();
 	}
@@ -217,6 +233,7 @@ class GooglePlaygroundLogin extends LoginMethod {
 	public function submitPasswordForm() {
 		$this->container->get('div')->get_by_id('passwordNext', false)->click();
 		$this->container->get('browser')->wait();
+		sleep(2);
 	}
 	
 	public function isReserveEmailRequired() {
@@ -249,19 +266,35 @@ class GooglePlaygroundLogin extends LoginMethod {
 	}
 	
 	public function isPhoneVerificationRequired() {
+		$this->container->get('browser')->wait();
+		$result = $this->container->get('input')->get_by_id('phoneNumberId')->is_visibled();
+		$this->container->get('browser')->wait();
 		
+		return $result;
 	}
 	
-	public function inputPhoneRequired($phone) {}
+	public function inputPhoneRequired($phone) {
+		$this->container->get('browser')->wait();
+		$this->container->get('input')->get_by_id('phoneNumberId')->send_input($phone);
+		$this->container->get('browser')->wait();
+	}
 	
 	public function submitPhoneRequiredForm() {
-		
+		$this->container->get('browser')->wait();
+		$this->container->get('span')->get_by_inner_text('Далее', false)->send_mouse_click();
+		$this->container->get('browser')->wait();
 	}
 	
-	public function inputSms($sms) {}
+	public function inputSms($sms) {
+		$this->container->get('browser')->wait();
+		$this->container->get('input')->get_by_id('idvAnyPhonePin')->send_input($sms);
+		$this->container->get('browser')->wait();
+	}
 	
 	public function submitSmsForm() {
-		
+		$this->container->get('browser')->wait();
+		$this->container->get('span')->get_by_inner_text('Далее', false)->send_mouse_click();
+		$this->container->get('browser')->wait();
 	}
 	
 	public function isDeviceVerificationRequired() {
@@ -273,19 +306,23 @@ class GooglePlaygroundLogin extends LoginMethod {
 	}
 	
 	public function isAllowConsentRequired() {
-		if (preg_match("#consentsummary#", $this->container->get('webpage')->get_url())) 
+		$this->container->get('browser')->wait();
+		sleep(2);
+		if (preg_match("#consentsummary#", $this->container->get('webpage')->get_url()))  {
+			
 			return true;
+		}
 	}
 	
 	public function submitAllowConsentForm() {
 		$this->container->get('div')->get_by_id('submit_approve_access', false)->click();
 		$this->container->get('browser')->wait();
 		$this->container->get('browser')->wait_js();
-		
-		
+		sleep(2);
 	}
 	
-	public function allowConsent() {		
+	public function allowConsent() {
+	$this->container->get('browser')->wait();
 		$vars = $this->container->get('checkbox')->get_all()->elements;
 		
 		foreach($vars as $var) {

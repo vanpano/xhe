@@ -11,16 +11,20 @@ class BrowserSettings extends Command {
 	}
 	
 	public function initProxy($ip, $port, $login, $password) {
-		//$this->container->call(\App\Command\DisableProxy::class);
-		//$this->container->call(\App\Command\EnableProxy::class, ['ip' => $ip, 'port' => $port, 'login' => $login, 'pass' => $password]);
+		$this->container->call(\App\Command\DisableProxy::class);
+		$this->container->call(\App\Command\EnableProxy::class, ['ip' => $ip, 'port' => $port, 'login' => $login, 'pass' => $password]);
+		
+		/*
 		$this->output = array_merge($this->output, [
 			"Proxy" => $ip . ":" . $port,
 			"ProxyLogin" => $login,
 			"ProxyPassword" => $password
-		]);
+		]);*/
+		
 	}
 	
 	public function initProfile($data) {
+		
 		extract($data);
 		
 		if (isset($useragent) && !is_null($useragent)) {
@@ -50,6 +54,7 @@ class BrowserSettings extends Command {
 			]);
 			//$this->container->call(\App\Command\SetCanvas::class, ['canvas' => $canvas]);
 		}
+		
 		
 		if (isset($resolution)  && !is_null($resolution)) {
 			$this->output = array_merge($this->output, [

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "521dcfb79e0fa5a0eb7f3879e4fcdefe",
+    "content-hash": "654ef824f92cf62e5219bdae0457ef57",
     "packages": [
         {
             "name": "mnapoli/silly",
@@ -341,6 +341,60 @@
                 "source": "https://github.com/php-fig/container/tree/1.1.1"
             },
             "time": "2021-03-05T17:36:06+00:00"
+        },
+        {
+            "name": "s00d/onlinesim-api",
+            "version": "1.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/s00d/onlinesim-api.git",
+                "reference": "04aa35f33f47311ab080e113ab2f3167d1fa2633"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/s00d/onlinesim-api/zipball/04aa35f33f47311ab080e113ab2f3167d1fa2633",
+                "reference": "04aa35f33f47311ab080e113ab2f3167d1fa2633",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "larapack/dd": "1.*",
+                "phpunit/phpunit": "^5",
+                "vlucas/phpdotenv": "^4.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "s00d\\OnlineSimApi\\": "src/",
+                    "Tests\\": "tests/"
+                },
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "s00d",
+                    "email": "Virus191288@gmail.com"
+                }
+            ],
+            "description": "php onlinesim api client",
+            "keywords": [
+                "api",
+                "client",
+                "onlinesim"
+            ],
+            "support": {
+                "issues": "https://github.com/s00d/onlinesim-api/issues",
+                "source": "https://github.com/s00d/onlinesim-api/tree/master"
+            },
+            "time": "2020-08-10T19:50:37+00:00"
         },
         {
             "name": "symfony/console",
@@ -1280,5 +1334,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.0.0"
 }
